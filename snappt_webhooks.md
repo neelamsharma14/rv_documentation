@@ -24,13 +24,24 @@ SNAPPT (Resident Verify Portal) webhooks provide real-time notifications for doc
 ## Webhook URLs
 
 ### Base URLs
-- **Production**: `https://gateway.entrata.com/webhooks/residentverify/`
-- **Sandbox**: `https://gateway.entrata.com/webhooks/residentverify/sandbox/`
+The Resident Verify Portal uses dynamic URL generation based on the environment:
+
+- **Production**: `https://residentverify.com/`
+- **Stage**: `https://residentverify.com/`
+- **Development**: `http://[env-stack-id].residentverify.com/`
 
 ### Specific Endpoints
-- **Document Verification**: `/document-verification`
-- **Income Verification**: `/income-verification`
-- **ID Scanning**: `/id-scanning`
+Based on the codebase analysis, webhooks are accessed through the Resident Verify Portal with module/action routing:
+
+- **Document Verification**: `/?module=document_verification&action=webhook`
+- **Income Verification**: `/?module=voi&action=trigger_webhook`
+- **ID Scanning**: `/?module=id_scanning&action=webhook`
+
+### Actual Webhook URL Structure
+The webhook URLs follow the Resident Verify Portal routing pattern:
+```
+https://residentverify.com/?module=[module_name]&action=[action_name]&keys=[encrypted_parameters]
+```
 
 ## Security Features
 
@@ -169,7 +180,7 @@ User-Agent: SNAPPT-Webhook/1.0
 
 1. Create a new collection named "SNAPPT Webhooks"
 2. Set up environment variables:
-   - `base_url`: `https://gateway.entrata.com/webhooks/residentverify`
+   - `base_url`: `https://residentverify.com`
    - `api_key`: Your SNAPPT API key
    - `webhook_secret`: Your webhook secret
 
@@ -177,7 +188,7 @@ User-Agent: SNAPPT-Webhook/1.0
 
 **Request Setup:**
 - **Method**: POST
-- **URL**: `{{base_url}}/document-verification`
+- **URL**: `{{base_url}}/?module=document_verification&action=webhook`
 - **Headers**:
   ```
   Content-Type: application/json
@@ -214,7 +225,7 @@ User-Agent: SNAPPT-Webhook/1.0
 
 **Request Setup:**
 - **Method**: POST
-- **URL**: `{{base_url}}/income-verification`
+- **URL**: `{{base_url}}/?module=voi&action=trigger_webhook`
 - **Headers**:
   ```
   Content-Type: application/json
@@ -240,7 +251,7 @@ User-Agent: SNAPPT-Webhook/1.0
 
 **Request Setup:**
 - **Method**: POST
-- **URL**: `{{base_url}}/id-scanning`
+- **URL**: `{{base_url}}/?module=id_scanning&action=webhook`
 - **Headers**:
   ```
   Content-Type: application/json
@@ -308,6 +319,33 @@ pm.test("Response time is less than 5000ms", function () {
     pm.expect(pm.response.responseTime).to.be.below(5000);
 });
 ```
+
+## Verification Steps
+
+### 1. Webhook URL Verification
+- Verify the webhook URL is accessible from your network
+- Test with a simple GET request to ensure the endpoint responds
+- Check for any firewall or network restrictions
+
+### 2. Authentication Verification
+- Ensure your API key is valid and active
+- Verify the webhook secret is correctly configured
+- Test signature generation and verification
+
+### 3. Payload Verification
+- Validate JSON structure matches expected format
+- Check all required fields are present
+- Verify data types and formats
+
+### 4. Response Verification
+- Confirm webhook returns expected status codes
+- Verify response body contains expected content
+- Check response time is within acceptable limits
+
+### 5. Database Verification
+- Verify webhook data is properly stored in database
+- Check screening status updates correctly
+- Confirm activity logs are created
 
 ## Error Handling
 
