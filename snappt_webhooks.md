@@ -1,8 +1,8 @@
-# SNAPPT Webhooks Documentation
+#  Webhooks Documentation
 
 ## Overview
 
-SNAPPT (Resident Verify Portal) webhooks provide real-time notifications for document verification, income verification, and ID scanning processes. These webhooks enable seamless integration between the Resident Verify Portal and the Entrata screening system.
+Resident Verify Portal) webhooks provide real-time notifications for document verification, income verification, and ID scanning processes. These webhooks enable seamless integration between the Resident Verify Portal and the Entrata screening system.
 
 ## Webhook Types
 
